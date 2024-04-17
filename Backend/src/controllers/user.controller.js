@@ -1,7 +1,7 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { ErrorHandler } from "../middlewares/error.middileware.js";
 import { User } from "../models/user.model.js";
-import { generateToken } from "../utils/jwtVerify.js";
+import { generateToken } from "../utils/generateToken.js";
 
 const signUp = catchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;

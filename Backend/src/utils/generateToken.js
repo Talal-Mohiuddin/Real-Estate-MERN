@@ -4,9 +4,6 @@ const generateToken = (user, message, status, res) => {
   res
     .status(status)
     .cookie(cookieName, token, {
-      expires: new Date(
-        Date.now() + process.env.COOKIE_EXPIERY * 24 * 60 * 60 * 1000
-      ),
       httpOnly: true,
     })
     .json({
