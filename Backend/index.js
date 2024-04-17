@@ -3,15 +3,22 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { errorMiddleware } from "./src/middlewares/error.middileware.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+
 
 dotenv.config();
-
 const app = express();
 const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(
+  cors({
+    origin: [process.env.FRONT_END_URL, process.env.Dashboard_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 async function connectDb() {
   try {
     await mongoose.connect(process.env.MONGOURL).then(() => {

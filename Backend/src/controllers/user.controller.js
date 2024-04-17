@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js";
 
 const signUp = catchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
-  if(!name || !email || !password) {
+  if (!name || !email || !password) {
     return next(new ErrorHandler("Please fill all fields", 400));
   }
   const userExist = await User.findOne({ email });
@@ -16,7 +16,7 @@ const signUp = catchAsyncErrors(async (req, res, next) => {
     email,
     password,
   });
-  user.save();
+  await user.save();
   if (!user) {
     return next(new ErrorHandler("User not created", 400));
   }
@@ -27,8 +27,6 @@ const signUp = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-const signIn = catchAsyncErrors(async (req, res, next) => {
-
-});
+const signIn = catchAsyncErrors(async (req, res, next) => {});
 
 export { signUp };
