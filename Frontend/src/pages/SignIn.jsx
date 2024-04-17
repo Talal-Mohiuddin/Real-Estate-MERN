@@ -5,7 +5,12 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import {userLoginFail,userLoginRequest,userLoginSuccess} from '../redux/userSlice.js'
+import {
+  userLoginFail,
+  userLoginRequest,
+  userLoginSuccess,
+} from "../redux/userSlice.js";
+import Oauth from "../components/Oauth.jsx";
 
 const SignIn = () => {
   const [details, setDetails] = useState({
@@ -72,6 +77,7 @@ const SignIn = () => {
         >
           {isPending ? "Loading" : "Login"}
         </button>
+        <Oauth />
       </form>
       <div className="flex gap-2 mt-5">
         <p>Don't have an account?</p>

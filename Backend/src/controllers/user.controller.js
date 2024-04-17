@@ -46,4 +46,28 @@ const signIn = catchAsyncErrors(async (req, res, next) => {
   generateToken(user, "Login successfully", 200, res);
 });
 
-export { signUp, signIn };
+const oauth = catchAsyncErrors(async (req, res, next) => {
+  const { name, email, photo } = req.body;
+  const user = await User.findOne({ email });
+  if (user) {
+    generateToken(user, "Login successfully", 200, res);
+  } else {
+    const generatepassword = Math.random().toString(36).slice(-8);
+    const userName =
+      email.split(" ").join("").toLowerCase() +
+      Math.floor(Math.random() * 1000);
+    const user = await User.create({
+      name: userName,
+      email,
+      password: generatepassword,
+      avatar: photo,
+    });
+    if (!user) {
+      return next(new ErrorHandler("User not created", 400));
+    }
+    await user.save();
+    generateToken(user, "Login successfully", 200, res);
+  }
+});
+
+export { signUp, signIn, oauth };
