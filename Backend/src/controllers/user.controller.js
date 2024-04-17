@@ -1,6 +1,7 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { ErrorHandler } from "../middlewares/error.middileware.js";
 import { User } from "../models/user.model.js";
+import { generateToken } from "../utils/jwtVerify.js";
 
 const signUp = catchAsyncErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -27,6 +28,22 @@ const signUp = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-const signIn = catchAsyncErrors(async (req, res, next) => {});
+const signIn = catchAsyncErrors(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("Please fill all fields", 400));
+  }
 
-export { signUp };
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new ErrorHandler("User does not found", 401));
+  }
+  const isPasswordMatch = await user.comparePassword(password);
+  if (!isPasswordMatch) {
+    return next(new ErrorHandler("Wrong credientials", 401));
+  }
+
+  generateToken(user, "Login successfully", 200, res);
+});
+
+export { signUp, signIn };
