@@ -70,4 +70,33 @@ const oauth = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-export { signUp, signIn, oauth };
+const updateUser = catchAsyncErrors(async (req, res, next) => {
+  if (req.user._id.toString() !== req.params.id.toString()) {
+    return next(
+      new ErrorHandler("You are not authorized to update this user", 401)
+    );
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        avatar: req.body.avatar,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedUser) {
+    return next(new ErrorHandler("User not updated", 400));
+  }
+  res.status(200).json({
+    success: true,
+    message: "User updated successfully",
+    updatedUser,
+  });
+});
+
+export { signUp, signIn, oauth, updateUser };
