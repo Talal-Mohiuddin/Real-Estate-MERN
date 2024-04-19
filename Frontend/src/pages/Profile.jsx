@@ -36,6 +36,7 @@ const Profile = () => {
     avatar: userProfile,
   });
   const [file, setfile] = useState(undefined);
+  const [getListing, setgetListing] = useState([]);
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -163,6 +164,27 @@ const Profile = () => {
     mutationSignout.mutate();
     navigate("/signin");
   }
+  const mutationListing = useMutation({
+    mutationFn: async () => {
+      const { data } = await axios.get(
+        `http://localhost:3000/user/getlisting`,
+        {
+          withCredentials: true,
+        }
+      );
+      return data;
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+    onSuccess: (data) => {
+      setgetListing(data.listing);
+    },
+  });
+
+  function showListing() {
+    mutationListing.mutate();
+  }
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -220,7 +242,12 @@ const Profile = () => {
         <button className="bg-slate-700 p-3 uppercase text-white rounded-lg hover:opacity-95 disabled:opacity-80 ">
           update
         </button>
-        <Link to="/create-listing" className="text-center bg-blue-700 text-white p-3 rounded-lg uppercase">Create A listing</Link>
+        <Link
+          to="/create-listing"
+          className="text-center bg-blue-700 text-white p-3 rounded-lg uppercase"
+        >
+          Create A listing
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">
@@ -230,6 +257,42 @@ const Profile = () => {
           Sign Out
         </span>
       </div>
+      <button onClick={showListing} className="text-green-700 p-3 w-full">
+        Show Listing
+      </button>
+      {getListing && getListing.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Listing
+          </h1>
+          {getListing.map((list) => {
+            return (
+              <div
+                key={list._id}
+                className="border p-3 rounded-lg flex justify-between items-center gap-4"
+              >
+                <Link to={`/listing/${list._id}`}>
+                  <img
+                    className="h-16 w-16 object-contain"
+                    src={list.imageUrls[0]}
+                    alt=""
+                  />
+                </Link>
+                <Link
+                  className="flex-1 text-slate-700 hover:underline truncate font-semibold"
+                  to={`/listing/${list._id}`}
+                >
+                  <p>{list.name}</p>
+                </Link>
+                <div className="flex flex-col items-center">
+                  <button className="text-red-700 uppercase">Delete</button>
+                  <button className="uppercase text-gray-700">edit</button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
