@@ -110,4 +110,11 @@ const deleteUser = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-export { signUp, signIn, oauth, updateUser, deleteUser };
+const signOut = catchAsyncErrors(async (req, res, next) => {
+  res.clearCookie("user").status(200).json({
+    success: true,
+    message: "User signout successfully",
+  });
+});
+
+export { signUp, signIn, oauth, updateUser, deleteUser, signOut };

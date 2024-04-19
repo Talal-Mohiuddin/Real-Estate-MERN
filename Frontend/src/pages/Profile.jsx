@@ -17,6 +17,9 @@ import {
   deleteUserFail,
   deleteUserRequest,
   deleteUserSuccess,
+  SignOutRequest,
+  SignOutSuccess,
+  SignOutFail,
 } from "../redux/userSlice.js";
 import { useNavigate } from "react-router-dom";
 
@@ -138,6 +141,29 @@ const Profile = () => {
     navigate("/signin");
   }
 
+  const mutationSignout = useMutation({
+    mutationFn: async () => {
+      dispatch(SignOutRequest());
+      const { data } = await axios.get(`http://localhost:3000/user/signout`, {
+        withCredentials: true,
+      });
+      return data;
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
+      dispatch(SignOutFail(error.response.data.message));
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      dispatch(SignOutSuccess());
+    },
+  });
+
+  function handleSignout() {
+    mutationSignout.mutate();
+    navigate("/signin");
+  }
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -199,7 +225,9 @@ const Profile = () => {
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">
           Delete Account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleSignout} className="text-red-700 cursor-pointer">
+          Sign Out
+        </span>
       </div>
     </div>
   );
