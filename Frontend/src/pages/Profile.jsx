@@ -14,7 +14,11 @@ import {
   updateUserFail,
   updateUserRequest,
   updateUserSuccess,
+  deleteUserFail,
+  deleteUserRequest,
+  deleteUserSuccess,
 } from "../redux/userSlice.js";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const fileref = useRef(null);
@@ -36,6 +40,7 @@ const Profile = () => {
   }, [file]);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { name, email, avatar, password } = formData;
 
   function handleChnage(e) {
@@ -105,6 +110,34 @@ const Profile = () => {
       }
     );
   };
+  const mutationDelete = useMutation({
+    mutationFn: async () => {
+      dispatch(deleteUserRequest());
+      const { data } = await axios.delete(
+        `http://localhost:3000/user/delete/${user.user._id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return data;
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
+      dispatch(deleteUserFail(error.response.data.message));
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      dispatch(deleteUserSuccess());
+    },
+  });
+
+  function handleDelete() {
+    confirm("Are you sure you want to delete your account?");
+    if (!confirm) return;
+    mutationDelete.mutate();
+    navigate("/signin");
+  }
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -163,7 +196,9 @@ const Profile = () => {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span onClick={handleDelete} className="text-red-700 cursor-pointer">
+          Delete Account
+        </span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
     </div>

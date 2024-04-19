@@ -94,4 +94,20 @@ const updateUser = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-export { signUp, signIn, oauth, updateUser };
+const deleteUser = catchAsyncErrors(async (req, res, next) => {
+  if (req.user._id?.toString() !== req?.params.id?.toString()) {
+    return next(
+      new ErrorHandler("You are not authorized to delete this user", 403)
+    );
+  }
+  const user = await User.findByIdAndDelete(req.params.id);
+  if (!user) {
+    return next(new ErrorHandler("User not deleted", 400));
+  }
+  res.clearCookie("user").status(200).json({
+    success: true,
+    message: "User deleted successfully",
+  });
+});
+
+export { signUp, signIn, oauth, updateUser, deleteUser };
