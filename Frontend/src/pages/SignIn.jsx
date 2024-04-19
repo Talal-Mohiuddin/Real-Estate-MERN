@@ -29,7 +29,15 @@ const SignIn = () => {
       dispatch(userLoginRequest());
       const { data } = await axios.post(
         "http://localhost:3000/user/signin",
-        details
+        details,
+        {
+          withCredentials: true,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
       return data;
     },

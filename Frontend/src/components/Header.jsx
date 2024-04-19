@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 const Header = () => {
   const { user } = useSelector((state) => state.user);
   const userimage = user?.user?.avatar;
+  console.log(user);
 
   return (
     <header className="shadow-md bg-slate-200">

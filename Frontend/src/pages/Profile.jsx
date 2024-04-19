@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
@@ -7,6 +7,14 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import {
+  updateUserFail,
+  updateUserRequest,
+  updateUserSuccess,
+} from "../redux/userSlice.js";
 
 const Profile = () => {
   const fileref = useRef(null);
@@ -27,8 +35,52 @@ const Profile = () => {
     }
   }, [file]);
 
+  const dispatch = useDispatch();
+  const { name, email, avatar, password } = formData;
+
   function handleChnage(e) {
     setformData({ ...formData, [e.target.id]: e.target.value });
+  }
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      dispatch(updateUserRequest());
+      const { data } = await axios.post(
+        `http://localhost:3000/user/update/${user.user._id}`,
+        { ...formData, password: formData.password || user.user.password },
+        {
+          withCredentials: true,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return data;
+    },
+    onError: (error) => {
+      dispatch(updateUserFail(error.response.data.message));
+      toast.error(error.response.data.message);
+    },
+    onSuccess: (data) => {
+      dispatch(updateUserSuccess(data));
+      toast.success(data.message);
+    },
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (
+      name === user.user.name &&
+      email === user.user.email &&
+      avatar === user.user.avatar &&
+      password === ""
+    ) {
+      return toast.error("No changes made");
+    }
+
+    mutation.mutate();
   }
 
   const handleFileUpload = async (file) => {
@@ -41,7 +93,7 @@ const Profile = () => {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setfilePercentage((oldProgress) => Math.round(progress) );
+        setfilePercentage((oldProgress) => Math.round(progress));
       },
       (error) => {
         setfileUploadError(true);
@@ -56,7 +108,7 @@ const Profile = () => {
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-      <form className="flex gap-4 flex-col">
+      <form onSubmit={handleSubmit} className="flex gap-4 flex-col">
         <input
           type="file"
           ref={fileref}
@@ -67,7 +119,7 @@ const Profile = () => {
           }}
         />
         <img
-          src={formData.avatar ||  userProfile}
+          src={formData.avatar || userProfile}
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
           onClick={() => fileref.current.click()}
         />
