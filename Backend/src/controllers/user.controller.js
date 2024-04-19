@@ -1,5 +1,6 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { ErrorHandler } from "../middlewares/error.middileware.js";
+import { Listing } from "../models/listing.model.js";
 import { User } from "../models/user.model.js";
 import { generateToken } from "../utils/generateToken.js";
 
@@ -117,4 +118,16 @@ const signOut = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-export { signUp, signIn, oauth, updateUser, deleteUser, signOut };
+const getListing = catchAsyncErrors(async (req, res, next) => {
+  const listing = await Listing.find({ userRef: req.user._id });
+  if (!listing) {
+    return next(new ErrorHandler("Listing not found", 400));
+  }
+  res.status(200).json({
+    success: true,
+    message: "Listing found successfully",
+    listing,
+  });
+});
+
+export { signUp, signIn, oauth, updateUser, deleteUser, signOut, getListing };

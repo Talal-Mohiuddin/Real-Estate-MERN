@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signUp,signIn,oauth, updateUser, deleteUser, signOut } from "../controllers/user.controller.js";
+import { signUp,signIn,oauth, updateUser, deleteUser, signOut, getListing } from "../controllers/user.controller.js";
 import { verifyuser } from "../middlewares/Auth.js";
 
 const router = Router();
@@ -11,6 +11,7 @@ router.route('/oauth').post(oauth)
 router.route('/update/:id').post(verifyuser,updateUser)
 router.route('/delete/:id').delete(verifyuser,deleteUser)
 router.route('/signout').get(verifyuser,signOut)
+router.route('/getlisting').get(verifyuser,getListing)
 
 
 export default router;
