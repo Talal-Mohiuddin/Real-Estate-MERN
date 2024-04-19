@@ -21,7 +21,7 @@ import {
   SignOutSuccess,
   SignOutFail,
 } from "../redux/userSlice.js";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const fileref = useRef(null);
@@ -220,6 +220,7 @@ const Profile = () => {
         <button className="bg-slate-700 p-3 uppercase text-white rounded-lg hover:opacity-95 disabled:opacity-80 ">
           update
         </button>
+        <Link to="/create-listing" className="text-center bg-blue-700 text-white p-3 rounded-lg uppercase">Create A listing</Link>
       </form>
       <div className="flex justify-between mt-5">
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">
