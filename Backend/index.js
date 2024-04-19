@@ -38,5 +38,8 @@ connectDb().then(() => {
 import userRouter from "./src/routes/user.route.js";
 app.use("/user", userRouter);
 
+import listingRouter from "./src/routes/listing.route.js";
+app.use("/listing", listingRouter);
+
 app.use(errorMiddleware);
 export default app;
