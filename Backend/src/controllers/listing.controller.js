@@ -51,5 +51,48 @@ const editListing = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+const getListing = catchAsyncErrors(async (req, res, next) => {
+  let limit = parseInt(req.query.limit) || 6;
+  let startIndex = parseInt(req.query.startIndex) || 0;
+  let offer = req.query.offer;
 
-export { createListing, getIndividualListing, editListing };
+  if (offer === undefined || offer === "null") {
+    offer = { $in: [false, true] };
+  }
+
+  let furnished = req.query.furnished;
+  if (furnished === undefined || furnished === "null") {
+    furnished = { $in: [false, true] };
+  }
+
+  let parking = req.query.parking;
+  if (parking === undefined || parking === "null") {
+    parking = { $in: [false, true] };
+  }
+  let type = req.query.type;
+  if (type === undefined || type === "all") {
+    type = { $in: ["sale", "rent"] };
+  }
+  const searchTerm = req.query.searchTerm || "";
+  const sort = req.query.sort || "createdAt";
+  const order = req.query.order || "desc";
+
+  const listings = await Listing.find({
+    name: { $regex: searchTerm, $options: "i" },
+    offer,
+    furnished,
+    parking,
+    type,
+  })
+    .sort({ [sort]: order })
+    .limit(limit)
+    .skip(startIndex);
+
+  res.status(200).json({
+    success: true,
+    message: "Listing found successfully",
+    listings,
+  });
+});
+
+export { createListing, getIndividualListing, editListing, getListing };

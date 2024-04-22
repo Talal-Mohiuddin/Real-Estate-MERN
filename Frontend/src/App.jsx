@@ -9,6 +9,7 @@ import {
   SignIn,
   SignUp,
   Update,
+  Search,
 } from "./pages/index";
 import { Header, PrivateRoute } from "./components/index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/updatelisitng/:id" element={<Update />} />
           </Route>
           <Route path="/listing/:id" element={<Listing />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
       </QueryClientProvider>
     </Router>
