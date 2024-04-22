@@ -3,6 +3,7 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "../components";
+import {ListingItem} from '../components/index'
 
 const Search = () => {
   const [sidebarData, setsidebarData] = useState({
@@ -15,6 +16,8 @@ const Search = () => {
     order: "desc",
   });
   const navigate = useNavigate();
+  const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
 
   function handleChange(e) {
     if (
@@ -97,7 +100,12 @@ const Search = () => {
       console.log(error.response.data.message);
     },
     onSuccess: (data) => {
-      console.log(data);
+      setListings(data.listings);
+      if (data?.listings?.length === 6) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
     },
   });
 
@@ -214,10 +222,35 @@ const Search = () => {
           </button>
         </form>
       </div>
-      <div className="">
-        <h1 className="font-semibold text-3xl text-slate-700 p-3 mt-4 border-b  ">
-          Listing Results:
+      <div className="flex-1">
+        <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
+          Listing results:
         </h1>
+        <div className="p-7 flex flex-wrap gap-4">
+          {!isPending && listings?.length === 0 && (
+            <p className="text-xl text-slate-700">No listing found!</p>
+          )}
+          {isPending && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              <Spinner />
+            </p>
+          )}
+
+          {!isPending &&
+            listings &&
+            listings.map((listing) => (
+              <ListingItem key={listing._id} listing={listing} />
+            ))}
+
+          {showMore && (
+            <button
+              onClick={onShowMoreClick}
+              className="text-green-700 hover:underline p-7 text-center w-full"
+            >
+              Show more
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
