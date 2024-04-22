@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -164,6 +165,7 @@ const Profile = () => {
     mutationSignout.mutate();
     navigate("/signin");
   }
+
   const mutationListing = useMutation({
     mutationFn: async () => {
       const { data } = await axios.get(
@@ -184,6 +186,48 @@ const Profile = () => {
 
   function showListing() {
     mutationListing.mutate();
+  }
+
+  const mutationDeleteListing = useMutation({
+    mutationFn: async (id) => {
+      const { data } = await axios.delete(
+        `http://localhost:3000/user/deletelisting/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setgetListing((oldListing) =>
+        oldListing.filter((list) => list._id !== id)
+      );
+      return data;
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+    onSuccess: (data) => {
+      console.log(data.message);
+    },
+  });
+
+  async function handleFirbaseDelete(imageUrls) {
+    const storage = getStorage(app);
+
+    while (imageUrls.length > 0) {
+      const url = imageUrls.pop();
+      const fileRef = ref(storage, url);
+      await deleteObject(fileRef);
+    }
+  }
+
+  function handleDeleteListing(id, imageUrls) {
+    confirm("Are you sure you want to delete this listing?");
+    if (!confirm) return;
+    mutationDeleteListing.mutate(id);
+    if (mutationDeleteListing.isSuccess) {
+      handleFirbaseDelete(imageUrls).then(() => {
+        toast.success("Listing deleted successfully");
+      });
+    }
   }
 
   return (
@@ -285,7 +329,14 @@ const Profile = () => {
                   <p>{list.name}</p>
                 </Link>
                 <div className="flex flex-col items-center">
-                  <button className="text-red-700 uppercase">Delete</button>
+                  <button
+                    onClick={() =>
+                      handleDeleteListing(list._id, list.imageUrls)
+                    }
+                    className="text-red-700 uppercase"
+                  >
+                    Delete
+                  </button>
                   <button className="uppercase text-gray-700">edit</button>
                 </div>
               </div>

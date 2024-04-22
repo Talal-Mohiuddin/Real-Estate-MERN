@@ -130,4 +130,30 @@ const getListing = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-export { signUp, signIn, oauth, updateUser, deleteUser, signOut, getListing };
+const deleteListing = catchAsyncErrors(async (req, res, next) => {
+  const list = req.params.id;
+  const listing = await Listing.findByIdAndDelete(list);
+  if (!listing) {
+    return next(new ErrorHandler("Listing not found", 400));
+  }
+  if (req.user._id.toString() !== listing.userRef.toString()) {
+    return next(
+      new ErrorHandler("You are not authorized to delete this listing", 403)
+    );
+  }
+  res.status(200).json({
+    success: true,
+    message: "Listing deleted successfully",
+  });
+});
+
+export {
+  signUp,
+  signIn,
+  oauth,
+  updateUser,
+  deleteUser,
+  signOut,
+  getListing,
+  deleteListing,
+};
