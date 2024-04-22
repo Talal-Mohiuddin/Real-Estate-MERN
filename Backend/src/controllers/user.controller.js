@@ -120,7 +120,7 @@ const signOut = catchAsyncErrors(async (req, res, next) => {
 
 const getListing = catchAsyncErrors(async (req, res, next) => {
   const listing = await Listing.find({ userRef: req.user._id });
-  if (!listing) {
+  if (listing.length === 0) {
     return next(new ErrorHandler("Listing not found", 400));
   }
   res.status(200).json({

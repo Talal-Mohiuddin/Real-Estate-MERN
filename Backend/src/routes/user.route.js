@@ -2,6 +2,7 @@ import { Router } from "express";
 import { signUp,signIn,oauth, updateUser, deleteUser, signOut, getListing, deleteListing } from "../controllers/user.controller.js";
 import { verifyuser } from "../middlewares/Auth.js";
 
+
 const router = Router();
 
 
@@ -13,6 +14,8 @@ router.route('/delete/:id').delete(verifyuser,deleteUser)
 router.route('/signout').get(verifyuser,signOut)
 router.route('/getlisting').get(verifyuser,getListing)
 router.route('/deletelisting/:id').delete(verifyuser,deleteListing)
+
+
 
 
 export default router;

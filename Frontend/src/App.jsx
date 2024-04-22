@@ -1,6 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { About, CreateListing, Home, Listing, Profile, SignIn, SignUp } from "./pages/index";
+import {
+  About,
+  CreateListing,
+  Home,
+  Listing,
+  Profile,
+  SignIn,
+  SignUp,
+  Update,
+} from "./pages/index";
 import { Header, PrivateRoute } from "./components/index";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -19,8 +28,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/create-listing" element={<CreateListing />} />
             <Route path="/listing/:id" element={<Listing />} />
-
-
+            <Route path="/updatelisitng/:id" element={<Update />} />
           </Route>
         </Routes>
       </QueryClientProvider>
