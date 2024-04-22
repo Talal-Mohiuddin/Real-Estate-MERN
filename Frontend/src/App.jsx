@@ -27,9 +27,9 @@ const App = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/create-listing" element={<CreateListing />} />
-            <Route path="/listing/:id" element={<Listing />} />
             <Route path="/updatelisitng/:id" element={<Update />} />
           </Route>
+          <Route path="/listing/:id" element={<Listing />} />
         </Routes>
       </QueryClientProvider>
     </Router>

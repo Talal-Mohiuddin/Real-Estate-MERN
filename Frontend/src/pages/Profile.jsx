@@ -230,10 +230,6 @@ const Profile = () => {
     }
   }
 
-  function handleEditListing() {
-    console.log("Edit listing");
-  }
-
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -342,12 +338,7 @@ const Profile = () => {
                     Delete
                   </button>
                   <Link to={`/updatelisitng/${list._id}`}>
-                    <button
-                      onClick={handleEditListing}
-                      className="uppercase text-gray-700"
-                    >
-                      edit
-                    </button>
+                    <button className="uppercase text-gray-700">edit</button>
                   </Link>
                 </div>
               </div>

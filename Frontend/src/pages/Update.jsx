@@ -12,6 +12,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { Spinner } from "../components";
 
 const CreateListing = () => {
   const [files, setfiles] = useState([]);
@@ -174,7 +175,7 @@ const CreateListing = () => {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
   if (error) {
     toast.error(error.response.data.message);
