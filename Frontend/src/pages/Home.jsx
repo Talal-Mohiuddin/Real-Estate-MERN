@@ -7,6 +7,7 @@ import "swiper/css/bundle";
 import { ListingItem, Spinner } from "../components/index";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { URL } from "../URL";
 
 export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
@@ -17,7 +18,7 @@ export default function Home() {
     queryKey: ["listing", "getlisting"],
     queryFn: async () => {
       const { data } = await axios.get(
-        "http://localhost:3000/listing/getlisting?limit=4&offer=true"
+        `${URL}/listing/getlisting?limit=4&offer=true`
       );
       setOfferListings(data.listings);
       return data;
@@ -28,7 +29,7 @@ export default function Home() {
     queryKey: ["listing", "getlisting"],
     queryFn: async () => {
       const { data } = await axios.get(
-        "http://localhost:3000/listing/getlisting?limit=4&type=rent"
+        `${URL}/listing/getlisting?limit=4&type=rent`
       );
       setRentListings(data.listings);
       return data;
@@ -39,7 +40,7 @@ export default function Home() {
     queryKey: ["listing", "getlisting"],
     queryFn: async () => {
       const { data } = await axios.get(
-        "http://localhost:3000/listing/getlisting?limit=4&type=sale"
+        `${URL}/listing/getlisting?limit=4&type=sale`
       );
       setSaleListings(data.listings);
       return data;
@@ -90,7 +91,6 @@ export default function Home() {
             </SwiperSlide>
           ))}
       </Swiper>
-
 
       <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10">
         {offerListings && offerListings.length > 0 && (

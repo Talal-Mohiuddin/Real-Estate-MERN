@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "../components";
 import {ListingItem} from '../components/index'
+import { URL } from "../URL";
 
 const Search = () => {
   const [sidebarData, setsidebarData] = useState({
@@ -88,7 +89,7 @@ const Search = () => {
   const mutationSearchListing = useMutation({
     mutationFn: async (searchQuery) => {
       const { data } = await axios.get(
-        `http://localhost:3000/listing/getlisting?${searchQuery}`,
+        `${URL}/listing/getlisting?${searchQuery}`,
         {
           withCredentials: true,
         }

@@ -11,6 +11,7 @@ import {
   userLoginSuccess,
 } from "../redux/userSlice.js";
 import Oauth from "../components/Oauth.jsx";
+import { URL } from "../URL.jsx";
 
 const SignIn = () => {
   const [details, setDetails] = useState({
@@ -28,7 +29,7 @@ const SignIn = () => {
     mutationFn: async () => {
       dispatch(userLoginRequest());
       const { data } = await axios.post(
-        "http://localhost:3000/user/signin",
+        `${URL}/user/signin`,
         details,
         {
           withCredentials: true,

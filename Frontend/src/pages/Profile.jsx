@@ -23,6 +23,7 @@ import {
   SignOutFail,
 } from "../redux/userSlice.js";
 import { Link, useNavigate } from "react-router-dom";
+import { URL } from "../URL.jsx";
 
 const Profile = () => {
   const fileref = useRef(null);
@@ -56,7 +57,7 @@ const Profile = () => {
     mutationFn: async () => {
       dispatch(updateUserRequest());
       const { data } = await axios.post(
-        `http://localhost:3000/user/update/${user.user._id}`,
+        `${URL}/user/update/${user.user._id}`,
         { ...formData, password: formData.password || user.user.password },
         {
           withCredentials: true,
@@ -119,7 +120,7 @@ const Profile = () => {
     mutationFn: async () => {
       dispatch(deleteUserRequest());
       const { data } = await axios.delete(
-        `http://localhost:3000/user/delete/${user.user._id}`,
+        `${URL}/user/delete/${user.user._id}`,
         {
           withCredentials: true,
         }
@@ -146,7 +147,7 @@ const Profile = () => {
   const mutationSignout = useMutation({
     mutationFn: async () => {
       dispatch(SignOutRequest());
-      const { data } = await axios.get(`http://localhost:3000/user/signout`, {
+      const { data } = await axios.get(`${URL}/user/signout`, {
         withCredentials: true,
       });
       return data;
@@ -168,12 +169,9 @@ const Profile = () => {
 
   const mutationListing = useMutation({
     mutationFn: async () => {
-      const { data } = await axios.get(
-        `http://localhost:3000/user/getlisting`,
-        {
-          withCredentials: true,
-        }
-      );
+      const { data } = await axios.get(`${URL}/user/getlisting`, {
+        withCredentials: true,
+      });
       return data;
     },
     onError: (error) => {
@@ -190,12 +188,9 @@ const Profile = () => {
 
   const mutationDeleteListing = useMutation({
     mutationFn: async (id) => {
-      const { data } = await axios.delete(
-        `http://localhost:3000/user/deletelisting/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const { data } = await axios.delete(`${URL}/user/deletelisting/${id}`, {
+        withCredentials: true,
+      });
       setgetListing((oldListing) =>
         oldListing.filter((list) => list._id !== id)
       );

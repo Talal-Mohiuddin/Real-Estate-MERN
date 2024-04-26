@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from "../components";
+import { URL } from "../URL";
 
 const CreateListing = () => {
   const [files, setfiles] = useState([]);
@@ -128,7 +129,7 @@ const CreateListing = () => {
   const mutationEdit = useMutation({
     mutationFn: async () => {
       const { data } = await axios.post(
-        `http://localhost:3000/listing/editlisting/${id}`,
+        `${URL}/listing/editlisting/${id}`,
         formDate,
         {
           withCredentials: true,
@@ -164,7 +165,7 @@ const CreateListing = () => {
     queryKey: ["listing", id],
     queryFn: async () => {
       const { data, error } = await axios.get(
-        `http://localhost:3000/listing/getindividuallisting/${id}`,
+        `${URL}/listing/getindividuallisting/${id}`,
         {
           withCredentials: true,
         }

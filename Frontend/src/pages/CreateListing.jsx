@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { URL } from "../URL";
 
 
 
@@ -40,7 +41,7 @@ const CreateListing = () => {
   const mutation = useMutation({
     mutationFn: async () => {
       const { data } = await axios.post(
-        "http://localhost:3000/listing/create",
+        `${URL}/listing/create`,
         {
           ...formDate,
           userRef: user.user._id,

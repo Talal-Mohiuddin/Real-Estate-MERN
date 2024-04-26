@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import { Oauth } from "../components";
+import { URL } from "../URL";
 
 const SignUp = () => {
   const [details, setDetails] = useState({
@@ -16,10 +17,7 @@ const SignUp = () => {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const { data } = await axios.post(
-        "http://localhost:3000/user/signup",
-        details
-      );
+      const { data } = await axios.post(`${URL}/user/signup`, details);
       return data;
     },
     onError: (error) => {

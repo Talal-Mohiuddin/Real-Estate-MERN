@@ -10,6 +10,7 @@ import "swiper/css/bundle";
 import { FaShare } from "react-icons/fa";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { FaBed, FaBath, FaParking, FaChair } from "react-icons/fa";
+import { URL } from "../URL";
 
 const Listing = () => {
   SwiperCore.use([Navigation]);
@@ -19,7 +20,7 @@ const Listing = () => {
     queryKey: ["listing", id],
     queryFn: async () => {
       const { data, error } = await axios.get(
-        `http://localhost:3000/listing/getindividuallisting/${id}`,
+        `${URL}/listing/getindividuallisting/${id}`,
         {
           withCredentials: true,
         }

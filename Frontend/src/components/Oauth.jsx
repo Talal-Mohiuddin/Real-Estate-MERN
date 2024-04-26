@@ -7,6 +7,7 @@ import { userLoginSuccess } from "../redux/userSlice";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { URL } from "../URL";
 
 const Oauth = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const Oauth = () => {
       const { displayName: name, email, photoURL: photo } = result.user;
 
       const { data } = await axios.post(
-        "http://localhost:3000/user/oauth",
+        `${URL}/user/oauth`,
         {
           name,
           email,
