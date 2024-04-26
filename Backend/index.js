@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { errorMiddleware } from "./src/middlewares/error.middileware.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
+import path from "path";
 
 dotenv.config();
 const app = express();
@@ -35,12 +35,19 @@ connectDb().then(() => {
   });
 });
 
+const _dirname = path.resolve();
+
 import userRouter from "./src/routes/user.route.js";
 app.use("/user", userRouter);
 
 import listingRouter from "./src/routes/listing.route.js";
 app.use("/listing", listingRouter);
 
+app.use(express.static(path.join(_dirname, "../frontend/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(_dirname, "../frontend/dist/index.html"));
+});
+
 app.use(errorMiddleware);
 export default app;
-
