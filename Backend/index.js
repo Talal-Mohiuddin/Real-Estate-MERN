@@ -9,12 +9,13 @@ import path from "path";
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
+const renderUrl = "https://real-estate-mern-agf1.onrender.com";
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: [process.env.FRONT_END_URL, process.env.Dashboard_URL],
+    origin: [process.env.FRONT_END_URL, process.env.Dashboard_URL, renderUrl],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
