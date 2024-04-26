@@ -43,10 +43,10 @@ app.use("/user", userRouter);
 import listingRouter from "./src/routes/listing.route.js";
 app.use("/listing", listingRouter);
 
-app.use(express.static(path.join(_dirname, "Frontend", "dist")));
+app.use(express.static(path.join(_dirname, "../Frontend/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(_dirname, "Frontend", "dist", "index.html"));
+  res.sendFile(path.join(_dirname, "../Frontend/dist/index.html"));
 });
 
 app.use(errorMiddleware);
